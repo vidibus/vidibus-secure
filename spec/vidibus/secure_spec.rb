@@ -11,7 +11,6 @@ describe "Vidibus::Secure" do
   let(:hex_format) { /^[0-9a-f]+$/ }
   
   describe ".settings" do
-    
     context "for :random" do
       it "should default to a length of 50" do
         Vidibus::Secure.settings[:random][:length].should eql(50)
@@ -55,7 +54,7 @@ describe "Vidibus::Secure" do
       random.length.should eql(50)
       random.should match(hex_format)
     end
-
+    
     it "should create a random string with a length of 60 chars if :length is provided" do
       Vidibus::Secure.random(:length => 60).length.should eql(60)
     end
@@ -114,7 +113,7 @@ describe "Vidibus::Secure" do
       Vidibus::Secure.settings[:crypt][:encoding] = :base64
     end
   end
-    
+  
   describe ".sign_request" do
     it "should not modifiy params for all requests except POST and PUT" do
       for verb in %w[get delete head options]
@@ -135,18 +134,18 @@ describe "Vidibus::Secure" do
         path, params = Vidibus::Secure.sign_request(:get, "http://vidibus.org/status", {}, key, "privado")
         path.should eql("http://vidibus.org/status?privado=09247a2534f14e57081193ef6834b08843352c796af264f77e76445472dae9ed")
       end
-  
+      
       it "should create a signature of a given URL" do
         path, params = Vidibus::Secure.sign_request(:get, "http://vidibus.org/", {}, key)
         path.should eql("http://vidibus.org/?sign=0ff9ec7056fd6a2b8ea1d2a1f462458719e3cf0b65485c55035ac906fd3d3368")
       end
-  
+      
       it "should create identical signatures for URLs with and without trailing slash" do
         signature = "0ff9ec7056fd6a2b8ea1d2a1f462458719e3cf0b65485c55035ac906fd3d3368"
         Vidibus::Secure.sign_request(:get, "http://vidibus.org", {}, key).first.should match(signature)
         Vidibus::Secure.sign_request(:get, "http://vidibus.org/", {}, key).first.should match(signature)
       end
-  
+      
       it "should create a signature of a given URI" do
         path, params = Vidibus::Secure.sign_request(:get, "http://vidibus.org/status", {}, key)
         path.should eql("http://vidibus.org/status?sign=09247a2534f14e57081193ef6834b08843352c796af264f77e76445472dae9ed")
@@ -157,7 +156,7 @@ describe "Vidibus::Secure" do
         Vidibus::Secure.sign_request(:get, "http://vidibus.org/status", {}, key).first.should match(signature)
         Vidibus::Secure.sign_request(:get, "http://vidibus.org/status/", {}, key).first.should match(signature)
       end
-    
+      
       it "should create a signature of URI with params" do
         path, params = Vidibus::Secure.sign_request(:get, "http://vidibus.org/status?type=server", {}, key)
         path.should eql("http://vidibus.org/status?type=server&sign=068dbf2695798e3cda2710ae34d74043653eae41d82cbbdf39edebd7e2ae9a50")
@@ -173,7 +172,7 @@ describe "Vidibus::Secure" do
         path, params = Vidibus::Secure.sign_request(:get, "http://vidibus.org/status?interval=2&sign=something&type=server", {}, key)
         path.should eql("http://vidibus.org/status?interval=2&sign=4a82dca2318108158f13d2d79915877efe550ffd1cb2dbe9753c2872803ae23d&type=server")
       end
-
+      
       it "should replace signature in URI without other params" do
         path, params = Vidibus::Secure.sign_request(:get, "http://vidibus.org/status?sign=something", {}, key)
         path.should eql("http://vidibus.org/status?sign=f4d3b1cf13614a5212fe46badb920747ed18c3c329fbd384efbdd70c26297b99")
@@ -186,25 +185,25 @@ describe "Vidibus::Secure" do
         params[:some].should eql("thing")
         params[:sign].should eql("90c71e477ea155e99b8a85b7f9ad0614e5445acfc33702cd3db614941f1a7df9")
       end
-    
+      
       it "should replace existing signature" do
         path, params = Vidibus::Secure.sign_request(:post, "http://vidibus.org/create", {:some => "thing", :sign => "something"}, key)
         params[:some].should eql("thing")
         params[:sign].should eql("90c71e477ea155e99b8a85b7f9ad0614e5445acfc33702cd3db614941f1a7df9")
       end
-    
+      
       it "should add signature param as string if params are given as strings" do
         path, params = Vidibus::Secure.sign_request(:post, "/", {"some" => "thing"}, key)
         params["some"].should eql("thing")
         params["sign"].should_not be_nil
       end
-    
+      
       it "should add signature param as symbol if params are given as symbols" do
         path, params = Vidibus::Secure.sign_request(:post, "/", {:some => "thing"}, key)
         params[:some].should eql("thing")
         params[:sign].should_not be_nil
       end
-    
+      
       it "should add signature param as symbol if no params are given" do
         path, params = Vidibus::Secure.sign_request(:post, "/", {}, key)
         params[:sign].should_not be_nil
@@ -239,7 +238,7 @@ describe "Vidibus::Secure" do
       params = {"sign"=>"90c71e477ea155e99b8a85b7f9ad0614e5445acfc33702cd3db614941f1a7df9", "some"=>"thing"}
       Vidibus::Secure.verify_request(:post, path, params, key).should be_true
     end
-
+    
     it "should return false if signature is invalid" do
       path = "http://vidibus.org/status?type=server&sign=invalid"
       Vidibus::Secure.verify_request(:get, path, {}, key).should be_false

@@ -17,11 +17,11 @@ module Vidibus
       # Returns a truly random string.
       # Now it is not much more than an interface for ActiveSupport::SecureRandom, 
       # but that might change over time.
-      #
+      # 
       # Options:
       #   :length     Length of string to generate
       #   :encoding   Encoding of string; hex or base64
-      #
+      # 
       # Keep in mind that a hexadecimal string is less secure
       # than a base64 encoded string with the same length!
       # 
@@ -64,7 +64,7 @@ module Vidibus
         _path.gsub!(/^(.+?)\/*(\?.+)?$/, "\\1\\2")
         _verb = verb.to_s.downcase
         _params = params.any? ? params.except(signature_param).to_a.sort{|a,b| a.to_s <=> b.to_s}.flatten.join("|") : ""
-
+        
         signature = sign("#{_verb}|#{_path}|#{_params}", key)
         
         if %w[post put].include?(_verb)
@@ -84,9 +84,9 @@ module Vidibus
         _path, _params = sign_request(verb, path, params, key, signature_param)
         return (path == _path and params == _params)
       end
-    
+      
       protected
-    
+      
       def crypt(cipher_method, data, key, options = {})
         cipher = OpenSSL::Cipher::Cipher.new(options[:algorithm])
         digest = OpenSSL::Digest::SHA512.new(key).digest
@@ -95,7 +95,7 @@ module Vidibus
         result = cipher.update(data)
         result << cipher.final
       end
-    
+      
       def encode(data, options = {})
         if options[:encoding] == :hex
           data.unpack("H*").to_s
@@ -103,7 +103,7 @@ module Vidibus
           [data].pack("m*")
         end
       end
-    
+      
       def decode(data, options = {})
         if options[:encoding] == :hex
           [data].pack("H*")

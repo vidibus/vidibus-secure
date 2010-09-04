@@ -13,7 +13,7 @@ Mongoid.configure do |config|
   config.master = Mongo::Connection.new.db(name)
 end
 
-RSpec.configure do |config|  
+RSpec.configure do |config|
   config.mock_with :rr
   config.after :suite do
     Mongoid.master.collections.select {|c| c.name !~ /system/ }.each(&:drop)

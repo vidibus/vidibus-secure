@@ -35,7 +35,8 @@ Gem::Specification.new do |s|
      "spec/spec_helper.rb",
      "spec/vidibus/secure/extensions/controller_spec.rb",
      "spec/vidibus/secure/mongoid_spec.rb",
-     "spec/vidibus/secure_spec.rb"
+     "spec/vidibus/secure_spec.rb",
+     "vidibus-secure.gemspec"
   ]
   s.homepage = %q{http://github.com/vidibus/vidibus-secure}
   s.rdoc_options = ["--charset=UTF-8"]

@@ -1,6 +1,6 @@
 module Vidibus
   module Secure
-    module Mongoid      
+    module Mongoid
       extend ActiveSupport::Concern
       module ClassMethods
         
