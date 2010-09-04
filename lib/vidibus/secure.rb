@@ -3,6 +3,9 @@ require "active_support/secure_random"
 
 module Vidibus
   module Secure
+    
+    class KeyError < StandardError; end
+    
     class << self
       
       # Define default settings for random, sign, and crypt.
@@ -33,6 +36,7 @@ module Vidibus
       
       # Returns signature of given data with given key.
       def sign(data, key, options = {})
+        raise KeyError.new("Please provide a secret key to sign data with.") unless key
         options = settings[:sign].merge(options)
         digest = OpenSSL::Digest::Digest.new(options[:algorithm])
         signature = OpenSSL::HMAC.digest(digest, key, data)
@@ -41,6 +45,7 @@ module Vidibus
       
       # Encrypts given data with given key.
       def encrypt(data, key, options = {})
+        raise KeyError.new("Please provide a secret key to encrypt data with.") unless key
         options = settings[:crypt].merge(options)
         encrypted_data = crypt(:encrypt, data, key, options)
         encode(encrypted_data, options)
@@ -48,6 +53,7 @@ module Vidibus
       
       # Decrypts given data with given key.
       def decrypt(data, key, options = {})
+        raise KeyError.new("Please provide a secret key to decrypt data with.") unless key
         options = settings[:crypt].merge(options)
         decoded_data = decode(data, options)
         crypt(:decrypt, decoded_data, key, options)

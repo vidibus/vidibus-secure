@@ -80,6 +80,10 @@ describe "Vidibus::Secure" do
       Vidibus::Secure.sign(data, key).should eql(signature_base64)
       Vidibus::Secure.settings[:sign][:encoding] = :hex
     end
+    
+    it "should raise an error if given secret key is nil" do
+      expect { Vidibus::Secure.sign(data, nil) }.to raise_error(Vidibus::Secure::KeyError)
+    end
   end
   
   describe ".encrypt" do
@@ -96,6 +100,10 @@ describe "Vidibus::Secure" do
       Vidibus::Secure.encrypt(data, key).should eql(encrypted_hex)
       Vidibus::Secure.settings[:crypt][:encoding] = :base64
     end
+    
+    it "should raise an error if given secret key is nil" do
+      expect { Vidibus::Secure.sign(data, nil) }.to raise_error(Vidibus::Secure::KeyError)
+    end
   end
   
   describe ".decrypt" do
@@ -111,6 +119,10 @@ describe "Vidibus::Secure" do
       Vidibus::Secure.settings[:crypt][:encoding] = :hex
       Vidibus::Secure.decrypt(encrypted_hex, key).should eql(data)
       Vidibus::Secure.settings[:crypt][:encoding] = :base64
+    end
+    
+    it "should raise an error if given secret key is nil" do
+      expect { Vidibus::Secure.sign(data, nil) }.to raise_error(Vidibus::Secure::KeyError)
     end
   end
   
