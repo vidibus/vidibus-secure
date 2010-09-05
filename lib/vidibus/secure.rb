@@ -1,5 +1,7 @@
 require "openssl"
 require "active_support/secure_random"
+require "rack"
+require "uri"
 
 module Vidibus
   module Secure
@@ -62,18 +64,22 @@ module Vidibus
       # Signs request.
       def sign_request(verb, path, params, key, signature_param = nil)
         default_signature_param = :sign
-        path = path.dup
-        params = (params and params.is_a?(Hash)) ? params.dup : {}
+        params_given = params and params.is_a?(Hash)
+        params = {} unless params_given
         signature_param ||= params.keys.first.is_a?(String) ? default_signature_param.to_s : default_signature_param
         
-        _path = path.gsub(/&?#{signature_param || default_signature_param}=[^&]+/, "")
-        _path.gsub!(/^(.+?)\/*(\?.+)?$/, "\\1\\2")
+        uri = URI.parse(path)
+        path_params = Rack::Utils.parse_query(uri.query)
+        uri.query = nil
+        
         _verb = verb.to_s.downcase
-        _params = params.any? ? params.except(signature_param).to_a.sort{|a,b| a.to_s <=> b.to_s}.flatten.join("|") : ""
+        _uri = uri.to_s.gsub(/\/+$/, "")
+        _params = (params.merge(path_params)).except(signature_param.to_s, signature_param.to_s.to_sym)        
+        _params = _params.any? ? _params.to_a.sort{|a,b| a.to_s <=> b.to_s}.flatten.join("|") : ""
+
+        signature = sign("#{_verb}|#{_uri}|#{_params}", key)
         
-        signature = sign("#{_verb}|#{_path}|#{_params}", key)
-        
-        if %w[post put].include?(_verb)
+        if %w[post put].include?(_verb) or (params_given and path_params.empty?)
           params[signature_param] = signature
         else
           unless path.gsub!(/(#{signature_param}=)[^&]+/, "\\1#{signature}")
@@ -86,8 +92,10 @@ module Vidibus
       
       # Verifies that given request is valid.
       def verify_request(verb, path, params, key, signature_param = nil)
-        params = %w[post put].include?(verb.to_s.downcase) ? params.dup : {}
-        _path, _params = sign_request(verb, path, params, key, signature_param)
+        # params = %w[post put].include?(verb.to_s.downcase) ? params.dup : {}
+        _path = path.dup
+        _params = params.dup
+        sign_request(verb, _path, _params, key, signature_param)
         return (path == _path and params == _params)
       end
       
