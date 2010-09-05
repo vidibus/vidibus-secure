@@ -55,6 +55,11 @@ describe "Vidibus::Secure::Mongoid" do
       model.reload
       model.my_secret_encrypted.should eql(encrypted_secret)
     end
+    
+    it "should not encrypt nil" do
+      model.my_secret = nil
+      model.my_secret_encrypted.should eql(nil)
+    end
   end
   
   describe "#my_secret" do
@@ -74,6 +79,11 @@ describe "Vidibus::Secure::Mongoid" do
       model.save!
       model.reload
       model.my_secret.should eql(secret)
+    end
+    
+    it "should not decrypt nil" do
+      model.my_secret_encrypted = nil
+      model.my_secret.should eql(nil)
     end
   end
 end

@@ -17,7 +17,7 @@ module Vidibus
             # Define setter
             class_eval <<-EOV
               def #{field}=(value)
-                self.#{encrypted_field} = Vidibus::Secure.encrypt(value, "#{key}")
+                self.#{encrypted_field} = value ? Vidibus::Secure.encrypt(value, "#{key}") : nil
               end
             EOV
             
