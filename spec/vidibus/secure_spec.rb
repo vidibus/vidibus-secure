@@ -319,5 +319,9 @@ describe "Vidibus::Secure" do
       params = {"sign" => "invalid", "some" => "thing"}
       Vidibus::Secure.verify_request(:post, path, params, key).should be_false
     end
+    
+    it "should accept nil params" do
+      expect { Vidibus::Secure.verify_request(:get, "", nil, key) }.to_not raise_error
+    end
   end
 end

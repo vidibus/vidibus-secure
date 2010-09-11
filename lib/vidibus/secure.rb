@@ -92,7 +92,7 @@ module Vidibus
       
       # Verifies that given request is valid.
       def verify_request(verb, path, params, key, signature_param = nil)
-        # params = %w[post put].include?(verb.to_s.downcase) ? params.dup : {}
+        params ||= {}
         _path = path.dup
         _params = params.dup
         sign_request(verb, _path, _params, key, signature_param)
