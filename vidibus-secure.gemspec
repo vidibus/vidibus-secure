@@ -56,17 +56,20 @@ Gem::Specification.new do |s|
 
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
       s.add_runtime_dependency(%q<mongoid>, ["~> 2.0.0.beta.17"])
-      s.add_runtime_dependency(%q<bson_ext>, ["~> 1.0.7"])
       s.add_runtime_dependency(%q<activesupport>, ["~> 3.0.0"])
+      s.add_runtime_dependency(%q<rack>, [">= 0"])
+      s.add_runtime_dependency(%q<vidibus-core_extensions>, [">= 0"])
     else
       s.add_dependency(%q<mongoid>, ["~> 2.0.0.beta.17"])
-      s.add_dependency(%q<bson_ext>, ["~> 1.0.7"])
       s.add_dependency(%q<activesupport>, ["~> 3.0.0"])
+      s.add_dependency(%q<rack>, [">= 0"])
+      s.add_dependency(%q<vidibus-core_extensions>, [">= 0"])
     end
   else
     s.add_dependency(%q<mongoid>, ["~> 2.0.0.beta.17"])
-    s.add_dependency(%q<bson_ext>, ["~> 1.0.7"])
     s.add_dependency(%q<activesupport>, ["~> 3.0.0"])
+    s.add_dependency(%q<rack>, [">= 0"])
+    s.add_dependency(%q<vidibus-core_extensions>, [">= 0"])
   end
 end
 
