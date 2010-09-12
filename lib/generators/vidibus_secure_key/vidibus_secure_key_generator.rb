@@ -1,6 +1,6 @@
 class VidibusSecureKeyGenerator < Rails::Generators::Base
   desc 'Generates an initializer that sets ENV["VIDIBUS_SECURE_KEY"]'
-  
+
   def create_initializer
     create_file "config/initializers/vidibus_secure_key.rb" do
       %(# This is a secret key for encrypting values of field defined by attr_encrypted.\n) +
