@@ -64,9 +64,10 @@ module Vidibus
       # Signs request.
       def sign_request(verb, path, params, key, signature_param = nil)
         default_signature_param = :sign
-        params_given = params and params.is_a?(Hash)
+        params_given = !!params
+        raise ArgumentError.new("Given params is not a Hash.") if params_given and !params.is_a?(Hash)
         params = {} unless params_given
-        signature_param ||= params.keys.first.is_a?(String) ? default_signature_param.to_s : default_signature_param
+        signature_param ||= (params_given and params.keys.first.is_a?(String)) ? default_signature_param.to_s : default_signature_param
         
         uri = URI.parse(path)
         path_params = Rack::Utils.parse_query(uri.query)

@@ -134,6 +134,13 @@ describe "Vidibus::Secure" do
       end
     end
     
+    it "should require that given params is a Hash" do
+      params = %w[1 2 3]
+      expect {
+        Vidibus::Secure.sign_request(:post, "/", params, key)
+      }.to raise_error(ArgumentError, "Given params is not a Hash.")
+    end
+    
     context "for requests without body" do
       it "should add signature to params, if no params are given in URI and params argument is a hash" do
         path = "http://vidibus.org/status"
