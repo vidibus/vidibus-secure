@@ -25,7 +25,7 @@ module Vidibus
         def valid_request?(secret, options = {})
           method = options.delete(:method) || request.method
           uri = options.delete(:uri) || request.protocol + request.host_with_port + request.fullpath
-          params = options.delete(:params) || request.params.except(:action, :controller, :id)
+          params = options.delete(:params) || request.params.except(:action, "action", :controller, "controller", :id, "id")
           Vidibus::Secure.verify_request(method, uri, params, secret)
         end
       end

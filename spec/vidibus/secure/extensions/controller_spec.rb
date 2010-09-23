@@ -55,6 +55,12 @@ describe "Vidibus::Secure::Extensions::Controller" do
       controller.valid_request?(secret).should be_true
     end
 
+    it "should omit 'action', 'controller', and 'id' from request.params" do
+      Vidibus::Secure.sign_request(:get, "http://vidibus.org/", controller.request.params, secret)
+      controller.request.params.merge("action" => "index", "controller" => "application", "id" => nil)
+      controller.valid_request?(secret).should be_true
+    end
+
     it "should keep :action, :controller, and :id in custom params" do
       params = { :action => "index", :controller => "application", :id => "12" }
       Vidibus::Secure.sign_request(:get, "http://vidibus.org/", params, secret)
