@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Andre Pankratz"]
-  s.date = %q{2010-09-12}
+  s.date = %q{2010-09-23}
   s.description = %q{Description...}
   s.email = %q{andre@vidibus.com}
   s.extra_rdoc_files = [
@@ -42,7 +42,7 @@ Gem::Specification.new do |s|
   s.rdoc_options = ["--charset=UTF-8"]
   s.require_paths = ["lib"]
   s.rubygems_version = %q{1.3.7}
-  s.summary = %q{Security tools}
+  s.summary = %q{Security tools for Vidibus applications}
   s.test_files = [
     "spec/spec_helper.rb",
      "spec/vidibus/secure/extensions/controller_spec.rb",
@@ -55,18 +55,18 @@ Gem::Specification.new do |s|
     s.specification_version = 3
 
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
-      s.add_runtime_dependency(%q<mongoid>, ["~> 2.0.0.beta.17"])
+      s.add_runtime_dependency(%q<mongoid>, ["~> 2.0.0.beta.20"])
       s.add_runtime_dependency(%q<activesupport>, ["~> 3.0.0"])
       s.add_runtime_dependency(%q<rack>, [">= 0"])
       s.add_runtime_dependency(%q<vidibus-core_extensions>, [">= 0"])
     else
-      s.add_dependency(%q<mongoid>, ["~> 2.0.0.beta.17"])
+      s.add_dependency(%q<mongoid>, ["~> 2.0.0.beta.20"])
       s.add_dependency(%q<activesupport>, ["~> 3.0.0"])
       s.add_dependency(%q<rack>, [">= 0"])
       s.add_dependency(%q<vidibus-core_extensions>, [">= 0"])
     end
   else
-    s.add_dependency(%q<mongoid>, ["~> 2.0.0.beta.17"])
+    s.add_dependency(%q<mongoid>, ["~> 2.0.0.beta.20"])
     s.add_dependency(%q<activesupport>, ["~> 3.0.0"])
     s.add_dependency(%q<rack>, [">= 0"])
     s.add_dependency(%q<vidibus-core_extensions>, [">= 0"])
