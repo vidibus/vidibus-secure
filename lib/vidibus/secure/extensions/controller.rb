@@ -1,3 +1,6 @@
+require "uri"
+require "rack/utils"
+
 module Vidibus
   module Secure
     module Extensions
@@ -25,7 +28,10 @@ module Vidibus
         def valid_request?(secret, options = {})
           method = options.delete(:method) || request.method
           uri = options.delete(:uri) || request.protocol + request.host_with_port + request.fullpath
-          params = options.delete(:params) || request.params.except(:action, "action", :controller, "controller", :id, "id")
+          params = options.delete(:params) || begin
+            query = URI.parse(uri).query
+            query ? Rack::Utils.parse_query(query) : {}
+          end
           Vidibus::Secure.verify_request(method, uri, params, secret)
         end
       end

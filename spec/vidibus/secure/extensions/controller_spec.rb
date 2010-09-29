@@ -34,9 +34,9 @@ describe "Vidibus::Secure::Extensions::Controller" do
       controller.valid_request?(secret, :uri => "something", :params => {})
     end
 
-    it "should use request.params if no :params are provided" do
-      mock(controller.request).params {{}}
-      controller.valid_request?(secret, :uri => "something", :method => "get")
+    it "should extract params from request uri unless params are provided" do
+      mock(Rack::Utils).parse_query("with=params").twice {{}}
+      controller.valid_request?(secret, :uri => "something/?with=params", :method => "get")
     end
 
     it "should use given params" do
@@ -45,23 +45,13 @@ describe "Vidibus::Secure::Extensions::Controller" do
     end
 
     it "should return true for valid requests" do
-      Vidibus::Secure.sign_request(:get, "http://vidibus.org/", controller.request.params, secret)
+      params = {}
+      Vidibus::Secure.sign_request(:get, "http://vidibus.org/", params, secret)
+      controller.request.fullpath = "?sign=#{params[:sign]}"
       controller.valid_request?(secret).should be_true
     end
 
-    it "should omit :action, :controller, and :id from request.params" do
-      Vidibus::Secure.sign_request(:get, "http://vidibus.org/", controller.request.params, secret)
-      controller.request.params.merge(:action => "index", :controller => "application", :id => nil)
-      controller.valid_request?(secret).should be_true
-    end
-
-    it "should omit 'action', 'controller', and 'id' from request.params" do
-      Vidibus::Secure.sign_request(:get, "http://vidibus.org/", controller.request.params, secret)
-      controller.request.params.merge("action" => "index", "controller" => "application", "id" => nil)
-      controller.valid_request?(secret).should be_true
-    end
-
-    it "should keep :action, :controller, and :id in custom params" do
+    it "should use given custom params" do
       params = { :action => "index", :controller => "application", :id => "12" }
       Vidibus::Secure.sign_request(:get, "http://vidibus.org/", params, secret)
       controller.valid_request?(secret, :params => params).should be_true
