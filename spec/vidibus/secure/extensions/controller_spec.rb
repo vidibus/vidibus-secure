@@ -11,7 +11,7 @@ describe "Vidibus::Secure::Extensions::Controller" do
   before do
     stub(controller).request do
       @request ||= begin
-        Struct.new("Request", :protocol, :host_with_port, :fullpath, :method, :params) unless defined?(Struct::Request)
+        Struct.new("Request", :protocol, :host_with_port, :fullpath, :method, :request_parameters) unless defined?(Struct::Request)
         Struct::Request.new("http://", "vidibus.org", "/", "get", {})
       end
     end
@@ -34,8 +34,8 @@ describe "Vidibus::Secure::Extensions::Controller" do
       controller.valid_request?(secret, :uri => "something", :params => {})
     end
 
-    it "should extract params from request uri unless params are provided" do
-      mock(Rack::Utils).parse_query("with=params").twice {{}}
+    it "should use request_parameters unless params are provided" do
+      mock(controller.request).request_parameters
       controller.valid_request?(secret, :uri => "something/?with=params", :method => "get")
     end
 
