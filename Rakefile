@@ -8,6 +8,7 @@ begin
   require "jeweler"
   Jeweler::Tasks.new do |gem|
     gem.name = "vidibus-secure"
+    gem.rubyforge_project = "vidibus-secure"
     gem.summary = %Q{Security tools for Vidibus applications}
     gem.description = %Q{Description...}
     gem.email = "andre@vidibus.com"
