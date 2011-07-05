@@ -2,6 +2,7 @@ source "http://rubygems.org"
 
 gem "mongoid", "~> 2"
 gem "activesupport", "~> 3"
+gem "json"
 gem "vidibus-core_extensions"
 
 group :development do
