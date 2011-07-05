@@ -20,3 +20,4 @@ pkg
 .document
 
 ## PROJECT::SPECIFIC
+Gemfile.lock
