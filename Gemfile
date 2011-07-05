@@ -9,5 +9,5 @@ group :development do
   gem "rails", "~> 3"
   gem "rspec", "~> 2"
   gem "rr"
-  gem "relevance-rcov"
+  gem "rcov"
 end
