@@ -49,6 +49,9 @@ module Vidibus
       def encrypt(data, key, options = {})
         raise KeyError.new("Please provide a secret key to encrypt data with.") unless key
         options = settings[:crypt].merge(options)
+        unless data.is_a?(String)
+          data = JSON.generate(data)
+        end
         encrypted_data = crypt(:encrypt, data, key, options)
         encode(encrypted_data, options)
       end
@@ -58,7 +61,12 @@ module Vidibus
         raise KeyError.new("Please provide a secret key to decrypt data with.") unless key
         options = settings[:crypt].merge(options)
         decoded_data = decode(data, options)
-        crypt(:decrypt, decoded_data, key, options)
+        decrypted_data = crypt(:decrypt, decoded_data, key, options)
+        begin
+          JSON.parse(decrypted_data)
+        rescue JSON::ParserError
+          decrypted_data
+        end
       end
 
       # Signs request.

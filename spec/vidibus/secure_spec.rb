@@ -3,8 +3,14 @@ require "spec_helper"
 describe "Vidibus::Secure" do
   let(:key) { "8KTbTanrBTQ5c8CjANpJQjPWcIstFxq/uFIUQBF3gRnztM565xIfe8MStVcLilbEhjYwfZiD4lFWINF22Aw8gVEbkSf2rLN0fnuO9YtNqFLQU6m/OldO5JbsBJPCwuzsPYmZ1w==" }
   let(:data) { "My name is Bond. You know the rest." }
+  let(:data_hash) {{"name" => "James Bond"}}
+  let(:data_array) {["Bond", "James"]}
   let(:encrypted_base64) { "hXUWa3gHRpYr/Fi2qm9xdTyZg7NSpYq8X2p1EL+/wffUg9IeIjVbSvyUYAvy\nTLbc\n" }
+  let(:encrypted_base64_array) { "pG9SNq9r2fQVxCiN8jYNciukklnZ+5YagtCE0LAj2bg=\n" }
+  let(:encrypted_base64_hash) { "kjV3/v52KcsGKoNs7zgcmHih90uvc+hP5X90s6X27GE=\n" }
   let(:encrypted_hex) { "8575166b780746962bfc58b6aa6f71753c9983b352a58abc5f6a7510bfbfc1f7d483d21e22355b4afc94600bf24cb6dc" }
+  let(:encrypted_hex_array) { "8575166b780746962bfc58b6aa6f71753c9983b352a58abc5f6a7510bfbfc1f7d483d21e22355b4afc94600bf24cb6dc" }
+  let(:encrypted_hex_hash) { "8575166b780746962bfc58b6aa6f71753c9983b352a58abc5f6a7510bfbfc1f7d483d21e22355b4afc94600bf24cb6dc" }
   let(:signature_base64) { "AhTlmymUI9q2bdrtJ0vLdyV8Y8eUf2U5xrzoK5PdWKQ=\n" }
   let(:signature_hex) { "0214e59b299423dab66ddaed274bcb77257c63c7947f6539c6bce82b93dd58a4" }
   let(:base64_format) { /([A-Z]|\+|\/)/ }
@@ -104,11 +110,27 @@ describe "Vidibus::Secure" do
     it "should raise an error if given secret key is nil" do
       expect { Vidibus::Secure.sign(data, nil) }.to raise_error(Vidibus::Secure::KeyError)
     end
+
+    it "should encrypt array data" do
+      Vidibus::Secure.encrypt(data_array, key).should eql(encrypted_base64_array)
+    end
+
+    it "should encrypt hash data" do
+      Vidibus::Secure.encrypt(data_hash, key).should eql(encrypted_base64_hash)
+    end
   end
 
   describe ".decrypt" do
     it "should decrypt a base64 string" do
       Vidibus::Secure.decrypt(encrypted_base64, key).should eql(data)
+    end
+
+    it "should decrypt array data from base64 string" do
+      Vidibus::Secure.decrypt(encrypted_base64_array, key).should eql(data_array)
+    end
+
+    it "should decrypt hash data from base64 string" do
+      Vidibus::Secure.decrypt(encrypted_base64_hash, key).should eql(data_hash)
     end
 
     it "should decrypt a hexadecimal string if :encoding is provided" do
