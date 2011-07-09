@@ -82,11 +82,15 @@ module Vidibus
         uri.query = nil
 
         _verb = verb.to_s.downcase
-        _uri = uri.to_s.gsub(/\/+$/, "")
         _params = (params.merge(path_params)).except(signature_param.to_s, signature_param.to_s.to_sym)
-        _params = _params.any? ? _params.to_a_rec.flatten.sort{|a,b| a.to_s <=> b.to_s}.join("|") : ""
 
-        signature = sign("#{_verb}|#{_uri}|#{_params}", key)
+        signature_string = [
+          _verb,
+          uri.to_s.gsub(/\/+$/, ""),
+          _params.any? ? JSON.generate(_params) : ""
+        ].join("|")
+
+        signature = sign(signature_string, key)
 
         if %w[post put].include?(_verb) or (params_given and path_params.empty?)
           params[signature_param] = signature
