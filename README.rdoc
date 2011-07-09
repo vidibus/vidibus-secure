@@ -1,8 +1,16 @@
-= vidibus-secure
+= Vidibus::Secure
 
 Allows encryption and signing of requests and storing encrypted data within Mongoid documents.
 
 This gem is part of the open source SOA framework Vidibus: http://www.vidibus.org
+
+
+== Compatibility
+
+Vidibus::Secure is tested against Ruby 1.8.7.
+
+http://travis-ci.org/vidibus/vidibus-secure.png  {Build History}[http://travis-ci.org/vidibus/vidibus-secure]
+
 
 == Installation
 
