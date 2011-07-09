@@ -1,9 +1,8 @@
 = vidibus-secure
 
+Allows encryption and signing of requests and storing encrypted data within Mongoid documents.
+
 This gem is part of the open source SOA framework Vidibus: http://www.vidibus.org
-
-TODO: Describe
-
 
 == Installation
 
@@ -13,7 +12,7 @@ Add the dependency to the Gemfile of your application:
 
 Then call `bundle install` on your console.
 
-If you want to use Vidibus::Secure::Mongoid in your models, you should generate an initializer to set an unique encryption key:
+If you want to use Vidibus::Secure::Mongoid on your models, you should generate an initializer to set an unique encryption key:
 
   rails generate vidibus_secure_key
 
@@ -35,4 +34,4 @@ TODO: Describe
 
 == Copyright
 
-Copyright (c) 2010 Andre Pankratz. See LICENSE for details.
+Copyright (c) 2010-2011 Andre Pankratz. See LICENSE for details.
