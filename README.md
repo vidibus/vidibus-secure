@@ -7,7 +7,7 @@ This gem is part of [Vidibus](http://vidibus.org), an open source toolset for bu
 
 ## Installation
 
-Add `ruby gem "vidibus-secure"` to your Gemfile. Then call `bundle install` on your console.
+Add `gem "vidibus-secure"` to your Gemfile. Then call `bundle install` on your console.
 
 If you want to use Vidibus::Secure::Mongoid on your models, you should generate an initializer to set an unique encryption key by calling `rails generate vidibus_secure_key`, also on your console.
 
@@ -24,4 +24,4 @@ TODO
 
 ## Copyright
 
-Copyright (c) 2010-2011 Andre Pankratz. See LICENSE for details.
+&copy; 2010-2011 Andre Pankratz. See LICENSE for details.
