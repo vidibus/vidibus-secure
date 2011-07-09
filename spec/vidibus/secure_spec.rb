@@ -87,8 +87,8 @@ describe "Vidibus::Secure" do
       Vidibus::Secure.settings[:sign][:encoding] = :hex
     end
 
-    it "should raise an error if given secret key is nil" do
-      expect { Vidibus::Secure.sign(data, nil) }.to raise_error(Vidibus::Secure::KeyError)
+    it "should raise a KeyError if given secret key is nil" do
+      expect {Vidibus::Secure.sign(data, nil)}.to raise_error(Vidibus::Secure::KeyError)
     end
   end
 
@@ -108,7 +108,7 @@ describe "Vidibus::Secure" do
     end
 
     it "should raise an error if given secret key is nil" do
-      expect { Vidibus::Secure.sign(data, nil) }.to raise_error(Vidibus::Secure::KeyError)
+      expect {Vidibus::Secure.sign(data, nil)}.to raise_error(Vidibus::Secure::KeyError)
     end
 
     it "should encrypt array data" do
@@ -143,8 +143,8 @@ describe "Vidibus::Secure" do
       Vidibus::Secure.settings[:crypt][:encoding] = :base64
     end
 
-    it "should raise an error if given secret key is nil" do
-      expect { Vidibus::Secure.sign(data, nil) }.to raise_error(Vidibus::Secure::KeyError)
+    it "should raise a KeyError if given secret key is nil" do
+      expect {Vidibus::Secure.sign(data, nil)}.to raise_error(Vidibus::Secure::KeyError)
     end
   end
 
@@ -156,11 +156,9 @@ describe "Vidibus::Secure" do
       end
     end
 
-    it "should require that given params is a Hash" do
+    it "should raise an InputError if given params is not a Hash" do
       params = %w[1 2 3]
-      expect {
-        Vidibus::Secure.sign_request(:post, "/", params, key)
-      }.to raise_error(ArgumentError, "Given params is not a Hash.")
+      expect {Vidibus::Secure.sign_request(:post, "/", params, key)}.to raise_error(Vidibus::Secure::InputError, "Given params is not a Hash.")
     end
 
     context "for requests without body" do

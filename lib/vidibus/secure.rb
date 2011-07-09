@@ -6,7 +6,9 @@ require "uri"
 module Vidibus
   module Secure
 
-    class KeyError < StandardError; end
+    class Error < StandardError; end
+    class KeyError < Error; end
+    class InputError < Error; end
 
     class << self
 
@@ -73,7 +75,7 @@ module Vidibus
       def sign_request(verb, path, params, key, signature_param = nil)
         default_signature_param = :sign
         params_given = !!params
-        raise ArgumentError.new("Given params is not a Hash.") if params_given and !params.is_a?(Hash)
+        raise InputError.new("Given params is not a Hash.") if params_given and !params.is_a?(Hash)
         params = {} unless params_given
         signature_param ||= (params_given and params.keys.first.is_a?(String)) ? default_signature_param.to_s : default_signature_param
 
