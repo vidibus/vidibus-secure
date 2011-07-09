@@ -84,7 +84,7 @@ module Vidibus
         signature_string = [
           _verb,
           uri.to_s.gsub(/\/+$/, ""),
-          _params.any? ? JSON.generate(_params) : ""
+          _params.any? ? params_identifier(_params) : ""
         ].join("|")
 
         signature = sign(signature_string, key)
@@ -134,6 +134,23 @@ module Vidibus
         elsif options[:encoding] == :base64
           data.unpack("m*").to_s
         end
+      end
+
+      # Returns an identifier string from given params input.
+      #
+      # Example:
+      #   {:some=>{:nested=>{:really=>["serious", "stuff"]}, :are=>"params"}}
+      #   # => 1:some:2:are:params|2:nested:3:really:4:serious:|4:stuff:
+      #
+      def params_identifier(params, level = 1)
+        array = []
+        for key, value in params
+          if [Array, Hash].include?(value.class)
+            value = params_identifier(value, level + 1)
+          end
+          array << "#{level}:#{key}:#{value}"
+        end
+        array.sort.join("|")
       end
     end
   end

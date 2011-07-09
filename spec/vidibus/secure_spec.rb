@@ -182,7 +182,7 @@ describe "Vidibus::Secure" do
         path = "http://vidibus.org/status?feel=good"
         params = {}
         Vidibus::Secure.sign_request(:get, path, params, key)
-        path.should eql("http://vidibus.org/status?feel=good&sign=10327f77301dff0b6a3f2a3315d33c53fbd5f58b58770a35a02ce175a2a5c4a3")
+        path.should eql("http://vidibus.org/status?feel=good&sign=2be2169f27f11ccc519456887838dcbfef54eb461492d60b847d2f01adca9326")
         params.should eql({})
       end
 
@@ -219,11 +219,11 @@ describe "Vidibus::Secure" do
       it "should create a signature of URI with params" do
         path = "http://vidibus.org/status?type=server"
         Vidibus::Secure.sign_request(:get, path, {}, key)
-        path.should eql("http://vidibus.org/status?type=server&sign=842a91e461327bb96cea5a34bc8b17dd0e6883c8925d10e9d6822d0c2c847688")
+        path.should eql("http://vidibus.org/status?type=server&sign=ff98a086cca8af703537afe873009f16ea5554826fa5d2665c212a13e44f7da0")
       end
 
       it "should create identical signatures for URIs with params with and without trailing slash" do
-        signature = "842a91e461327bb96cea5a34bc8b17dd0e6883c8925d10e9d6822d0c2c847688"
+        signature = "ff98a086cca8af703537afe873009f16ea5554826fa5d2665c212a13e44f7da0"
         Vidibus::Secure.sign_request(:get, "http://vidibus.org/status?type=server", {}, key).first.should match(signature)
         Vidibus::Secure.sign_request(:get, "http://vidibus.org/status/?type=server", {}, key).first.should match(signature)
       end
@@ -231,7 +231,7 @@ describe "Vidibus::Secure" do
       it "should replace signature in URI with params" do
         path = "http://vidibus.org/status?interval=2&sign=something&type=server"
         Vidibus::Secure.sign_request(:get, path, {}, key)
-        path.should eql("http://vidibus.org/status?interval=2&sign=e3ea247ef9a3d5b748020ed70e2a43b5c4cf448fe3d530c52dc3970f3d2e3fbc&type=server")
+        path.should eql("http://vidibus.org/status?interval=2&sign=bd66fe642c39d01005090bb9d0a7f62f5c6d563878e6397261ed12bd79bdb92d&type=server")
       end
 
       it "should replace signature in URI without other params" do
@@ -241,7 +241,7 @@ describe "Vidibus::Secure" do
       end
 
       it "should create identical signatures for URIs with different params order" do
-        signature = "23bc614412edb1e5854a5757231a7c898d79e85d61f9c5e632ff3058a6ef7167"
+        signature = "116b6628f5b79a42ea9f8eb0e7901404ff641c34baa289dc32b6e2aa57c9281d"
         Vidibus::Secure.sign_request(:get, "http://vidibus.org/status?a=1&b=2", {}, key).first.should match(signature)
         Vidibus::Secure.sign_request(:get, "http://vidibus.org/status/?b=2&a=1", {}, key).first.should match(signature)
       end
@@ -251,25 +251,25 @@ describe "Vidibus::Secure" do
       it "should create a signature of path and params" do
         params = {:some => "thing"}
         Vidibus::Secure.sign_request(:post, "/", params, key)
-        params[:sign].should eql("6541a952ed68073a5531186f17984f64e10d8e19a579aaeb75adea1e16c1fabb")
+        params[:sign].should eql("a41b51acf01f7207d250a0a486e60ed385050f848237251efcdb58448e57d20d")
       end
 
       it "should create a signature of path and nested params" do
         params = {:some => {:nested => "params", :are => {:really => ["serious", "stuff"]}}}
         Vidibus::Secure.sign_request(:post, "/", params, key)
-        params[:sign].should eql("9f9c9bb577d874f1fc6beb2397758074e0e16b75c35ab2aff949091761bf83bf")
+        params[:sign].should eql("3a899c65b9a68fa473e3bc3388b7656538c85498cc63cdcac59eebfe9f68ce07")
       end
 
       it "should create a different signature of path and nested params with switched keys" do
         params = {:some => {:are => "params", :nested => {:really => ["serious", "stuff"]}}}
         Vidibus::Secure.sign_request(:post, "/", params, key)
-        params[:sign].should eql("3ff477b343e455903c785e21d3ebcec08733d609d5dcc69ad57ba57d59409d04")
+        params[:sign].should eql("d28b073381dad3c30bc8f5ff5984d7ff29e04dd95bc9ca04cd1ac95e878e4663")
       end
 
       it "should replace existing signature" do
         params = {:some => "thing", :sign => "something"}
         Vidibus::Secure.sign_request(:post, "/", params, key)
-        params[:sign].should eql("6541a952ed68073a5531186f17984f64e10d8e19a579aaeb75adea1e16c1fabb")
+        params[:sign].should eql("a41b51acf01f7207d250a0a486e60ed385050f848237251efcdb58448e57d20d")
       end
 
       it "should add signature param as string if params are given as strings" do
@@ -298,39 +298,39 @@ describe "Vidibus::Secure" do
 
   describe ".verify_request" do
     it "should return true for a valid GET request" do
-      path = "http://vidibus.org/status?type=server&sign=842a91e461327bb96cea5a34bc8b17dd0e6883c8925d10e9d6822d0c2c847688"
+      path = "http://vidibus.org/status?type=server&sign=ff98a086cca8af703537afe873009f16ea5554826fa5d2665c212a13e44f7da0"
       Vidibus::Secure.verify_request(:get, path, {}, key).should be_true
     end
 
     it "should return true for a valid GET request even if verb is upcase" do
-      path = "http://vidibus.org/status?type=server&sign=842a91e461327bb96cea5a34bc8b17dd0e6883c8925d10e9d6822d0c2c847688"
+      path = "http://vidibus.org/status?type=server&sign=ff98a086cca8af703537afe873009f16ea5554826fa5d2665c212a13e44f7da0"
       Vidibus::Secure.verify_request("GET", path, {}, key).should be_true
     end
 
     it "should return true for a valid GET request if params are given as hash" do
       path = "http://vidibus.org/status"
-      params = {:type => "server", :sign => "842a91e461327bb96cea5a34bc8b17dd0e6883c8925d10e9d6822d0c2c847688"}
+      params = {:type => "server", :sign => "ff98a086cca8af703537afe873009f16ea5554826fa5d2665c212a13e44f7da0"}
       Vidibus::Secure.verify_request("GET", path, params, key).should be_true
     end
 
     it "should return false if additional params are given" do
-      path = "http://vidibus.org/status?type=server&sign=842a91e461327bb96cea5a34bc8b17dd0e6883c8925d10e9d6822d0c2c847688"
+      path = "http://vidibus.org/status?type=server&sign=ff98a086cca8af703537afe873009f16ea5554826fa5d2665c212a13e44f7da0"
       Vidibus::Secure.verify_request("GET", path, { :some => "thing" }, key).should be_false
     end
 
     it "should return true for a valid POST request with params given as symbols" do
-      params = {:some => "thing", :sign => "6541a952ed68073a5531186f17984f64e10d8e19a579aaeb75adea1e16c1fabb"}
+      params = {:some => "thing", :sign => "a41b51acf01f7207d250a0a486e60ed385050f848237251efcdb58448e57d20d"}
       Vidibus::Secure.verify_request(:post, "/", params, key).should be_true
     end
 
     it "should return true for a valid POST request with params given as string" do
-      params = {"some"=>"thing", "sign"=>"6541a952ed68073a5531186f17984f64e10d8e19a579aaeb75adea1e16c1fabb"}
+      params = {"some"=>"thing", "sign"=>"a41b51acf01f7207d250a0a486e60ed385050f848237251efcdb58448e57d20d"}
       Vidibus::Secure.verify_request(:post, "/", params, key).should be_true
     end
 
     it "should return true for a valid POST request with nested params" do
       params = {
-        :sign => "9f9c9bb577d874f1fc6beb2397758074e0e16b75c35ab2aff949091761bf83bf",
+        :sign => "3a899c65b9a68fa473e3bc3388b7656538c85498cc63cdcac59eebfe9f68ce07",
         :some => {:nested => "params", :are => {:really => ["serious", "stuff"]}}
       }
       Vidibus::Secure.verify_request(:post, "/", params, key).should be_true
@@ -347,12 +347,12 @@ describe "Vidibus::Secure" do
     end
 
     it "should return false if request verb does not match signature" do
-      path = "http://vidibus.org/status?type=server&sign=068dbf2695798e3cda2710ae34d74043653eae41d82cbbdf39edebd7e2ae9a50"
+      path = "http://vidibus.org/status?type=server&sign=ff98a086cca8af703537afe873009f16ea5554826fa5d2665c212a13e44f7da0"
       Vidibus::Secure.verify_request(:delete, path, {}, key).should be_false
     end
 
     it "should return false if params do not match signature" do
-      params = {"sign" => "90c71e477ea155e99b8a85b7f9ad0614e5445acfc33702cd3db614941f1a7df9", "some" => "invalid"}
+      params = {"sign" => "ff98a086cca8af703537afe873009f16ea5554826fa5d2665c212a13e44f7da0", "some" => "invalid"}
       Vidibus::Secure.verify_request(:post, "/", params, key).should be_false
     end
 
