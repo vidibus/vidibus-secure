@@ -18,7 +18,7 @@ describe "Vidibus::Secure::Extensions::Controller" do
   end
 
   describe "#valid_request?" do
-    it "should available to controllers that stem from ActionController::Base" do
+    it "should be available to controllers that stem from ActionController::Base" do
       controller.should respond_to(:valid_request?)
     end
 
