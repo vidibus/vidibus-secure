@@ -1,5 +1,6 @@
 source "http://rubygems.org"
 
+gem "rack"
 gem "mongoid", "~> 2"
 gem "activesupport", "~> 3"
 gem "json"

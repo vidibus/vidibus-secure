@@ -1,3 +1,4 @@
+require "rack"
 require "active_support/core_ext"
 require "json"
 require "vidibus-core_extensions"
