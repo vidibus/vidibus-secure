@@ -257,13 +257,13 @@ describe "Vidibus::Secure" do
       it "should create a signature of path and nested params" do
         params = {:some => {:nested => "params", :are => {:really => ["serious", "stuff"]}}}
         Vidibus::Secure.sign_request(:post, "/", params, key)
-        params[:sign].should eql("13c049b1c90e1bd220f83277119c0f49de36b8b1639d1f0a9a85abb30b569da5")
+        params[:sign].should eql("9f9c9bb577d874f1fc6beb2397758074e0e16b75c35ab2aff949091761bf83bf")
       end
 
       it "should create a different signature of path and nested params with switched keys" do
         params = {:some => {:are => "params", :nested => {:really => ["serious", "stuff"]}}}
         Vidibus::Secure.sign_request(:post, "/", params, key)
-        params[:sign].should_not eql("13c049b1c90e1bd220f83277119c0f49de36b8b1639d1f0a9a85abb30b569da5")
+        params[:sign].should eql("3ff477b343e455903c785e21d3ebcec08733d609d5dcc69ad57ba57d59409d04")
       end
 
       it "should replace existing signature" do
@@ -330,7 +330,7 @@ describe "Vidibus::Secure" do
 
     it "should return true for a valid POST request with nested params" do
       params = {
-        :sign => "13c049b1c90e1bd220f83277119c0f49de36b8b1639d1f0a9a85abb30b569da5",
+        :sign => "9f9c9bb577d874f1fc6beb2397758074e0e16b75c35ab2aff949091761bf83bf",
         :some => {:nested => "params", :are => {:really => ["serious", "stuff"]}}
       }
       Vidibus::Secure.verify_request(:post, "/", params, key).should be_true
