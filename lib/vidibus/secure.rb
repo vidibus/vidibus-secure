@@ -1,8 +1,3 @@
-require "openssl"
-require "active_support/secure_random"
-require "rack"
-require "uri"
-
 module Vidibus
   module Secure
 

@@ -1,9 +1,11 @@
+require "openssl"
 require "rack"
+require "uri"
+require "active_support/secure_random"
 require "active_support/core_ext"
 require "json"
 require "vidibus-core_extensions"
 
-$:.unshift(File.join(File.dirname(__FILE__), "..", "lib", "vidibus"))
-require "secure"
-require "secure/mongoid"
-require "secure/extensions"
+require "vidibus/secure"
+require "vidibus/secure/mongoid"
+require "vidibus/secure/extensions"
