@@ -145,7 +145,7 @@ module Vidibus
       def params_identifier(params, level = 1)
         array = []
         for key, value in params
-          if [Array, Hash].include?(value.class)
+          if value.is_a?(Array) or value.is_a?(Hash)
             value = params_identifier(value, level + 1)
           end
           array << "#{level}:#{key}:#{value}"

@@ -336,6 +336,14 @@ describe "Vidibus::Secure" do
       Vidibus::Secure.verify_request(:post, "/", params, key).should be_true
     end
 
+    it "should return true if nested params are given as HashWithIndifferentAccess" do
+      params = ActiveSupport::HashWithIndifferentAccess.new({
+        :sign => "3a899c65b9a68fa473e3bc3388b7656538c85498cc63cdcac59eebfe9f68ce07",
+        :some => {:nested => "params", :are => {:really => ["serious", "stuff"]}}
+      })
+      Vidibus::Secure.verify_request("POST", "/", params, key).should be_true
+    end
+
     it "should return false if signature is invalid" do
       path = "http://vidibus.org/status?type=server&sign=invalid"
       Vidibus::Secure.verify_request(:get, path, {}, key).should be_false
