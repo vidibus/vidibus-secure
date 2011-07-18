@@ -122,7 +122,7 @@ module Vidibus
 
       def encode(data, options = {})
         if options[:encoding] == :hex
-          data.unpack("H*").to_s
+          data.unpack("H*").join
         elsif options[:encoding] == :base64
           [data].pack("m*")
         end
@@ -132,7 +132,7 @@ module Vidibus
         if options[:encoding] == :hex
           [data].pack("H*")
         elsif options[:encoding] == :base64
-          data.unpack("m*").to_s
+          data.unpack("m*").join
         end
       end
 
