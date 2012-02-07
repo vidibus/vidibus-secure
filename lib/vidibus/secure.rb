@@ -17,7 +17,7 @@ module Vidibus
       end
 
       # Returns a truly random string.
-      # Now it is not much more than an interface for ActiveSupport::SecureRandom,
+      # Now it is not much more than an interface for Ruby's SecureRandom,
       # but that might change over time.
       #
       # Options:
@@ -30,7 +30,7 @@ module Vidibus
       def random(options = {})
         options = settings[:random].merge(options)
         length = options[:length]
-        ActiveSupport::SecureRandom.send(options[:encoding], length)[0,length]
+        SecureRandom.send(options[:encoding], length)[0,length]
       end
 
       # Returns signature of given data with given key.
