@@ -15,7 +15,7 @@ Gem::Specification.new do |s|
   s.description = 'Allows encryption and signing of requests and storing encrypted data within Mongoid documents.'
 
   s.required_rubygems_version = '>= 1.3.6'
-  s.rubyforge_project         = 'vidibus-resource'
+  s.rubyforge_project         = 'vidibus-secure'
 
   s.add_dependency 'rack', '~> 1'
   s.add_dependency 'mongoid', '~> 2'
