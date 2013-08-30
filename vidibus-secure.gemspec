@@ -13,6 +13,7 @@ Gem::Specification.new do |s|
   s.homepage    = 'https://github.com/vidibus/vidibus-secure'
   s.summary     = 'Security tools for Vidibus applications'
   s.description = 'Allows encryption and signing of requests and storing encrypted data within Mongoid documents.'
+  s.license     = 'MIT'
 
   s.required_rubygems_version = '>= 1.3.6'
   s.rubyforge_project         = 'vidibus-secure'
