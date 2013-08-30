@@ -20,7 +20,7 @@ Gem::Specification.new do |s|
 
   s.add_dependency 'rack', '~> 1'
   s.add_dependency 'mongoid', '~> 2'
-  s.add_dependency 'activesupport', '~> 3.2'
+  s.add_dependency 'activesupport'
   s.add_dependency 'json'
   s.add_dependency 'vidibus-core_extensions'
 
@@ -30,7 +30,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'rspec', '~> 2'
   s.add_development_dependency 'rr'
   s.add_development_dependency 'simplecov'
-  s.add_development_dependency 'actionpack', '~> 3'
+  s.add_development_dependency 'actionpack'
 
   s.files = Dir.glob('{lib,app,config}/**/*') + %w[LICENSE README.md Rakefile]
   s.require_path = 'lib'
