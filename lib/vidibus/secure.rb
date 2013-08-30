@@ -59,6 +59,7 @@ module Vidibus
         options = settings[:crypt].merge(options)
         decoded_data = decode(data, options)
         decrypted_data = crypt(:decrypt, decoded_data, key, options)
+        return data unless decrypted_data
         begin
           JSON.parse(decrypted_data)
         rescue JSON::ParserError
@@ -112,6 +113,7 @@ module Vidibus
       protected
 
       def crypt(cipher_method, data, key, options = {})
+        return unless data && data != ''
         cipher = OpenSSL::Cipher::Cipher.new(options[:algorithm])
         digest = OpenSSL::Digest::SHA512.new(key).digest
         cipher.send(cipher_method)
@@ -121,6 +123,7 @@ module Vidibus
       end
 
       def encode(data, options = {})
+        return unless data
         if options[:encoding] == :hex
           data.unpack("H*").join
         elsif options[:encoding] == :base64
@@ -129,6 +132,7 @@ module Vidibus
       end
 
       def decode(data, options = {})
+        return unless data
         if options[:encoding] == :hex
           [data].pack("H*")
         elsif options[:encoding] == :base64

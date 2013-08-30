@@ -143,6 +143,24 @@ describe "Vidibus::Secure" do
       Vidibus::Secure.settings[:crypt][:encoding] = :base64
     end
 
+    it "should not fail with nil content" do
+      expect {Vidibus::Secure.decrypt(nil, key)}.not_to raise_error
+    end
+
+    it "should not fail with blank content" do
+      expect {Vidibus::Secure.decrypt('', key)}.not_to raise_error
+    end
+
+    it "should not fail with unencrypted content" do
+      pending 'really?'
+      expect {Vidibus::Secure.decrypt('hello', key)}.not_to raise_error
+    end
+
+    it "should return unencrypted content" do
+      pending 'really?'
+      Vidibus::Secure.decrypt('hello', key).should eql('hello')
+    end
+
     it "should raise a KeyError if given secret key is nil" do
       expect {Vidibus::Secure.sign(data, nil)}.to raise_error(Vidibus::Secure::KeyError)
     end
