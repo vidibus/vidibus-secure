@@ -11,14 +11,13 @@ require 'rr'
 require 'vidibus-secure'
 
 Mongoid.configure do |config|
-  name = 'vidibus-secure_test'
-  host = 'localhost'
-  config.master = Mongo::Connection.new.db(name)
+  config.connect_to('vidibus-secure_test')
 end
 
 RSpec.configure do |config|
   config.mock_with :rr
   config.after :suite do
-    Mongoid.master.collections.select {|c| c.name !~ /system/}.each(&:drop)
+    Mongoid::Sessions.default.collections.
+      select {|c| c.name !~ /system/}.each(&:drop)
   end
 end

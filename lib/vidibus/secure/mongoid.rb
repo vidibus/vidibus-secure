@@ -12,7 +12,7 @@ module Vidibus
 
             # Define Mongoid field
             encrypted_field = "#{field}_encrypted"
-            self.send(:field, encrypted_field, :type => BSON::Binary)
+            self.send(:field, encrypted_field, :type => Moped::BSON::Binary)
 
             # Define setter
             class_eval <<-EOV
