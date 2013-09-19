@@ -1,4 +1,4 @@
-# Vidibus::Secure [![](http://travis-ci.org/vidibus/vidibus-secure.png)](http://travis-ci.org/vidibus/vidibus-secure)
+# Vidibus::Secure [![Build Status](https://travis-ci.org/vidibus/vidibus-secure.png)](https://travis-ci.org/vidibus/vidibus-secure)
 
 Allows encryption and signing of requests and storing encrypted data within Mongoid documents.
 
