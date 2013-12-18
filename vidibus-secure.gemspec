@@ -19,7 +19,7 @@ Gem::Specification.new do |s|
   s.rubyforge_project         = 'vidibus-secure'
 
   s.add_dependency 'rack', '~> 1'
-  s.add_dependency 'mongoid', '~> 4'
+  s.add_dependency 'mongoid', '>= 4'
   s.add_dependency 'activesupport'
   s.add_dependency 'json'
   s.add_dependency 'vidibus-core_extensions'
