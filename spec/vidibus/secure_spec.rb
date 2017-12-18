@@ -331,6 +331,11 @@ describe "Vidibus::Secure" do
       Vidibus::Secure.verify_request("GET", path, params, key).should eq(true)
     end
 
+    it "should return true for a path with array params" do
+      path = 'http://vidibus.org/status?types[]=server&types[]=client&sign=4964e26220830d932a42a415b99a6ca2f118bc1d8b5b21095e3084056087e90e'
+      Vidibus::Secure.verify_request(:get, path, {}, key).should eq(true)
+    end
+
     it "should return false if additional params are given" do
       path = "http://vidibus.org/status?type=server&sign=ff98a086cca8af703537afe873009f16ea5554826fa5d2665c212a13e44f7da0"
       Vidibus::Secure.verify_request("GET", path, { :some => "thing" }, key).should eq(false)

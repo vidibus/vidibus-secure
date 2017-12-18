@@ -76,7 +76,7 @@ module Vidibus
         signature_param ||= (params_given and params.keys.first.is_a?(String)) ? default_signature_param.to_s : default_signature_param
 
         uri = URI.parse(path)
-        path_params = Rack::Utils.parse_query(uri.query)
+        path_params = Rack::Utils.parse_nested_query(uri.query)
         uri.query = nil
 
         _verb = verb.to_s.downcase
