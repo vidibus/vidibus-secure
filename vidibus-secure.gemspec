@@ -18,8 +18,8 @@ Gem::Specification.new do |s|
   s.required_rubygems_version = '>= 1.3.6'
   s.rubyforge_project         = 'vidibus-secure'
 
-  s.add_dependency 'rack', '~> 1'
-  s.add_dependency 'mongoid', '~> 4.0.0.alpha1'
+  s.add_dependency 'rack'
+  s.add_dependency 'mongoid'
   s.add_dependency 'activesupport'
   s.add_dependency 'json'
   s.add_dependency 'vidibus-core_extensions'
@@ -31,6 +31,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'rr'
   s.add_development_dependency 'simplecov'
   s.add_development_dependency 'actionpack'
+  s.add_development_dependency 'database_cleaner'
 
   s.files = Dir.glob('{lib,app,config}/**/*') + %w[LICENSE README.md Rakefile]
   s.require_path = 'lib'

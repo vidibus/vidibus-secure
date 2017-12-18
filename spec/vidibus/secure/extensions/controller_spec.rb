@@ -48,13 +48,13 @@ describe "Vidibus::Secure::Extensions::Controller" do
       params = {}
       Vidibus::Secure.sign_request(:get, "http://vidibus.org/", params, secret)
       controller.request.fullpath = "?sign=#{params[:sign]}"
-      controller.valid_request?(secret).should be_true
+      controller.valid_request?(secret).should eq(true)
     end
 
     it "should use given custom params" do
       params = { :action => "index", :controller => "application", :id => "12" }
       Vidibus::Secure.sign_request(:get, "http://vidibus.org/", params, secret)
-      controller.valid_request?(secret, :params => params).should be_true
+      controller.valid_request?(secret, :params => params).should eq(true)
     end
 
     it "should call Vidibus::Secure.verify_request" do

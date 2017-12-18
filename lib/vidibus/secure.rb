@@ -37,7 +37,7 @@ module Vidibus
       def sign(data, key, options = {})
         raise KeyError.new("Please provide a secret key to sign data with.") unless key
         options = settings[:sign].merge(options)
-        digest = OpenSSL::Digest::Digest.new(options[:algorithm])
+        digest = OpenSSL::Digest.new(options[:algorithm])
         signature = OpenSSL::HMAC.digest(digest, key, data)
         encode(signature, options)
       end

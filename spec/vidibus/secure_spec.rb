@@ -152,12 +152,12 @@ describe "Vidibus::Secure" do
     end
 
     it "should not fail with unencrypted content" do
-      pending 'really?'
+      skip 'really?'
       expect {Vidibus::Secure.decrypt('hello', key)}.not_to raise_error
     end
 
     it "should return unencrypted content" do
-      pending 'really?'
+      skip 'really?'
       Vidibus::Secure.decrypt('hello', key).should eql('hello')
     end
 
@@ -317,33 +317,33 @@ describe "Vidibus::Secure" do
   describe ".verify_request" do
     it "should return true for a valid GET request" do
       path = "http://vidibus.org/status?type=server&sign=ff98a086cca8af703537afe873009f16ea5554826fa5d2665c212a13e44f7da0"
-      Vidibus::Secure.verify_request(:get, path, {}, key).should be_true
+      Vidibus::Secure.verify_request(:get, path, {}, key).should eq(true)
     end
 
     it "should return true for a valid GET request even if verb is upcase" do
       path = "http://vidibus.org/status?type=server&sign=ff98a086cca8af703537afe873009f16ea5554826fa5d2665c212a13e44f7da0"
-      Vidibus::Secure.verify_request("GET", path, {}, key).should be_true
+      Vidibus::Secure.verify_request("GET", path, {}, key).should eq(true)
     end
 
     it "should return true for a valid GET request if params are given as hash" do
       path = "http://vidibus.org/status"
       params = {:type => "server", :sign => "ff98a086cca8af703537afe873009f16ea5554826fa5d2665c212a13e44f7da0"}
-      Vidibus::Secure.verify_request("GET", path, params, key).should be_true
+      Vidibus::Secure.verify_request("GET", path, params, key).should eq(true)
     end
 
     it "should return false if additional params are given" do
       path = "http://vidibus.org/status?type=server&sign=ff98a086cca8af703537afe873009f16ea5554826fa5d2665c212a13e44f7da0"
-      Vidibus::Secure.verify_request("GET", path, { :some => "thing" }, key).should be_false
+      Vidibus::Secure.verify_request("GET", path, { :some => "thing" }, key).should eq(false)
     end
 
     it "should return true for a valid POST request with params given as symbols" do
       params = {:some => "thing", :sign => "a41b51acf01f7207d250a0a486e60ed385050f848237251efcdb58448e57d20d"}
-      Vidibus::Secure.verify_request(:post, "/", params, key).should be_true
+      Vidibus::Secure.verify_request(:post, "/", params, key).should eq(true)
     end
 
     it "should return true for a valid POST request with params given as string" do
       params = {"some"=>"thing", "sign"=>"a41b51acf01f7207d250a0a486e60ed385050f848237251efcdb58448e57d20d"}
-      Vidibus::Secure.verify_request(:post, "/", params, key).should be_true
+      Vidibus::Secure.verify_request(:post, "/", params, key).should eq(true)
     end
 
     it "should return true for a valid POST request with nested params" do
@@ -351,7 +351,7 @@ describe "Vidibus::Secure" do
         :sign => "3a899c65b9a68fa473e3bc3388b7656538c85498cc63cdcac59eebfe9f68ce07",
         :some => {:nested => "params", :are => {:really => ["serious", "stuff"]}}
       }
-      Vidibus::Secure.verify_request(:post, "/", params, key).should be_true
+      Vidibus::Secure.verify_request(:post, "/", params, key).should eq(true)
     end
 
     it "should return true if nested params are given as HashWithIndifferentAccess" do
@@ -359,32 +359,32 @@ describe "Vidibus::Secure" do
         :sign => "3a899c65b9a68fa473e3bc3388b7656538c85498cc63cdcac59eebfe9f68ce07",
         :some => {:nested => "params", :are => {:really => ["serious", "stuff"]}}
       })
-      Vidibus::Secure.verify_request("POST", "/", params, key).should be_true
+      Vidibus::Secure.verify_request("POST", "/", params, key).should eq(true)
     end
 
     it "should return false if signature is invalid" do
       path = "http://vidibus.org/status?type=server&sign=invalid"
-      Vidibus::Secure.verify_request(:get, path, {}, key).should be_false
+      Vidibus::Secure.verify_request(:get, path, {}, key).should eq(false)
     end
 
     it "should return false if path does not match signature" do
       path = "http://vidibus.org/invalid?type=server&sign=068dbf2695798e3cda2710ae34d74043653eae41d82cbbdf39edebd7e2ae9a50"
-      Vidibus::Secure.verify_request(:get, path, {}, key).should be_false
+      Vidibus::Secure.verify_request(:get, path, {}, key).should eq(false)
     end
 
     it "should return false if request verb does not match signature" do
       path = "http://vidibus.org/status?type=server&sign=ff98a086cca8af703537afe873009f16ea5554826fa5d2665c212a13e44f7da0"
-      Vidibus::Secure.verify_request(:delete, path, {}, key).should be_false
+      Vidibus::Secure.verify_request(:delete, path, {}, key).should eq(false)
     end
 
     it "should return false if params do not match signature" do
       params = {"sign" => "ff98a086cca8af703537afe873009f16ea5554826fa5d2665c212a13e44f7da0", "some" => "invalid"}
-      Vidibus::Secure.verify_request(:post, "/", params, key).should be_false
+      Vidibus::Secure.verify_request(:post, "/", params, key).should eq(false)
     end
 
     it "should return false if signature does not match params" do
       params = {"sign" => "invalid", "some" => "thing"}
-      Vidibus::Secure.verify_request(:post, "/", params, key).should be_false
+      Vidibus::Secure.verify_request(:post, "/", params, key).should eq(false)
     end
 
     it "should accept nil params" do

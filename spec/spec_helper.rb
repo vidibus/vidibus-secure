@@ -9,6 +9,9 @@ require 'mongoid'
 require 'rspec'
 require 'rr'
 require 'vidibus-secure'
+require 'database_cleaner'
+
+Mongo::Logger.logger.level = Logger::FATAL
 
 Mongoid.configure do |config|
   config.connect_to('vidibus-secure_test')
@@ -16,8 +19,15 @@ end
 
 RSpec.configure do |config|
   config.mock_with :rr
-  config.after :suite do
-    Mongoid::Sessions.default.collections.
-      select {|c| c.name !~ /system/}.each(&:drop)
+  config.before(:suite) do
+    DatabaseCleaner.clean_with(:truncation)
+  end
+
+  config.before(:each) do
+    DatabaseCleaner.start
+  end
+
+  config.after(:each) do
+    DatabaseCleaner.clean
   end
 end
