@@ -7,7 +7,7 @@ module Vidibus
         extend ActiveSupport::Concern
 
         included do
-          helper_method :valid_request?
+          helper_method(:valid_request?) if respond_to?(:helper_method)
         end
 
         # Generates a signature of a request path.
