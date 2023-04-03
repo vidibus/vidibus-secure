@@ -46,14 +46,14 @@ describe "Vidibus::Secure::Mongoid" do
 
     it "should encrypt a given value" do
       model.my_secret = secret
-      model.my_secret_encrypted.should eql(encrypted_secret)
+      model.my_secret_encrypted.data.should eql(encrypted_secret)
     end
 
     it "should be persistent" do
       model.my_secret = secret
       model.save!
       model.reload
-      model.my_secret_encrypted.should eql(encrypted_secret)
+      model.my_secret_encrypted.data.should eql(encrypted_secret)
     end
 
     it "should not encrypt nil" do

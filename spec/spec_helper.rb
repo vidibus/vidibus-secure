@@ -9,7 +9,7 @@ require 'mongoid'
 require 'rspec'
 require 'rr'
 require 'vidibus-secure'
-require 'database_cleaner'
+require 'database_cleaner-mongoid'
 
 Mongo::Logger.logger.level = Logger::FATAL
 
@@ -19,15 +19,8 @@ end
 
 RSpec.configure do |config|
   config.mock_with :rr
-  config.before(:suite) do
-    DatabaseCleaner.clean_with(:truncation)
-  end
-
   config.before(:each) do
-    DatabaseCleaner.start
-  end
-
-  config.after(:each) do
+    DatabaseCleaner.strategy = :deletion
     DatabaseCleaner.clean
   end
 end

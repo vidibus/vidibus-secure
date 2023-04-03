@@ -1,4 +1,4 @@
 services: mongodb
 rvm:
-  - 1.9.3
+  - 2.6.8
 script: "bundle exec rspec spec --format progress"

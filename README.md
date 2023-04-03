@@ -14,14 +14,17 @@ If you want to use Vidibus::Secure::Mongoid on your models, you should generate 
 
 ## Usage
 
-TODO
+```
+class MyModel
+  include Mongoid::Document
+  include Vidibus::Secure::Mongoid
 
+  attr_encrypted :my_secret
+```
 
-## TODO
-
-* Documentation
+Defining `attr_encrypted :my_secret` will create setter and getter for `my_secret`. You can use it like normal. But it will be stored encrypted.
 
 
 ## Copyright
 
-&copy; 2010-2013 Andre Pankratz. See LICENSE for details.
+&copy; 2010-2023 Andre Pankratz. See LICENSE for details.

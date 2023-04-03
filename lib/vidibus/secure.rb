@@ -114,7 +114,7 @@ module Vidibus
 
       def crypt(cipher_method, data, key, options = {})
         return unless data && data != ''
-        cipher = OpenSSL::Cipher::Cipher.new(options[:algorithm])
+        cipher = OpenSSL::Cipher.new(options[:algorithm])
         digest = OpenSSL::Digest::SHA512.new(key).digest
         cipher.send(cipher_method)
         cipher.pkcs5_keyivgen(digest)

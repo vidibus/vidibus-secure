@@ -12,19 +12,21 @@ module Vidibus
 
             # Define Mongoid field
             encrypted_field = "#{field}_encrypted"
-            self.send(:field, encrypted_field, :type => BSON::Binary)
+            self.send(:field, encrypted_field, type: BSON::Binary)
 
             # Define setter
             class_eval <<-EOV
               def #{field}=(value)
-                self.#{encrypted_field} = value ? Vidibus::Secure.encrypt(value, "#{key}") : nil
+                self.#{encrypted_field} = value ?
+                  Vidibus::Secure.encrypt(value, "#{key}") :
+                  nil
               end
             EOV
 
             # Define getter
             class_eval <<-EOV
               def #{field}
-                Vidibus::Secure.decrypt(#{encrypted_field}, "#{key}") if #{encrypted_field}
+                Vidibus::Secure.decrypt(#{encrypted_field}.data, "#{key}") if #{encrypted_field}
               end
             EOV
           end
