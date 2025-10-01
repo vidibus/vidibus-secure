@@ -19,6 +19,7 @@ end
 
 RSpec.configure do |config|
   config.mock_with :rr
+  config.include RR::DSL
   config.before(:each) do
     DatabaseCleaner.strategy = :deletion
     DatabaseCleaner.clean
