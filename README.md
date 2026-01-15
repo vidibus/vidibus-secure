@@ -27,4 +27,4 @@ Defining `attr_encrypted :my_secret` will create setter and getter for `my_secre
 
 ## Copyright
 
-&copy; 2010-2023 Andre Pankratz. See LICENSE for details.
+&copy; 2010-2026 Andre Pankratz. See LICENSE for details.
