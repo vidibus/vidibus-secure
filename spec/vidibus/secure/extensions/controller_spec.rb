@@ -19,7 +19,7 @@ describe "Vidibus::Secure::Extensions::Controller" do
 
   describe "#valid_request?" do
     it "should be available to controllers that stem from ActionController::Base" do
-      controller.should respond_to(:valid_request?)
+      expect(controller).to respond_to(:valid_request?)
     end
 
     it "should build URI from request object if no :uri is provided" do
@@ -48,13 +48,13 @@ describe "Vidibus::Secure::Extensions::Controller" do
       params = {}
       Vidibus::Secure.sign_request(:get, "http://vidibus.org/", params, secret)
       controller.request.fullpath = "?sign=#{params[:sign]}"
-      controller.valid_request?(secret).should eq(true)
+      expect(controller.valid_request?(secret)).to eq(true)
     end
 
     it "should use given custom params" do
       params = { :action => "index", :controller => "application", :id => "12" }
       Vidibus::Secure.sign_request(:get, "http://vidibus.org/", params, secret)
-      controller.valid_request?(secret, :params => params).should eq(true)
+      expect(controller.valid_request?(secret, :params => params)).to eq(true)
     end
 
     it "should call Vidibus::Secure.verify_request" do
