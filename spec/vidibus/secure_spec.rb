@@ -38,8 +38,9 @@ describe "Vidibus::Secure" do
     end
 
     context "for :crypt" do
-      it "should default to AES-256-CBC algorithm" do
-        expect(Vidibus::Secure.settings[:crypt][:algorithm]).to eql("AES-256-CBC")
+      it "should default to AES-256-GCM algorithm" do
+        expect(Vidibus::Secure.settings[:crypt][:algorithm]).
+          to eql('AES-256-GCM')
       end
 
       it "should default to base64 encoding" do
@@ -93,54 +94,72 @@ describe "Vidibus::Secure" do
   end
 
   describe ".encrypt" do
-    it "should encrypt data as base64 string" do
-      expect(Vidibus::Secure.encrypt(data, key)).to eql(encrypted_base64)
+    it "should round-trip data via base64" do
+      blob = Vidibus::Secure.encrypt(data, key)
+      expect(blob).to match(base64_format)
+      expect(Vidibus::Secure.decrypt(blob, key)).to eql(data)
     end
 
-    it "should encrypt data as hexadecimal string if :encoding is provided" do
-      expect(Vidibus::Secure.encrypt(data, key, :encoding => :hex)).to eql(encrypted_hex)
+    it "should round-trip data via hex when :encoding is provided" do
+      blob = Vidibus::Secure.encrypt(data, key, :encoding => :hex)
+      expect(blob).to match(hex_format)
+      expect(Vidibus::Secure.decrypt(blob, key, :encoding => :hex)).
+        to eql(data)
     end
 
-    it "should encrypt data as hexadecimal string if encoding settings for :crypt are set to hex" do
+    it "should round-trip via hex when settings :encoding is :hex" do
       Vidibus::Secure.settings[:crypt][:encoding] = :hex
-      expect(Vidibus::Secure.encrypt(data, key)).to eql(encrypted_hex)
-      Vidibus::Secure.settings[:crypt][:encoding] = :base64
+      begin
+        blob = Vidibus::Secure.encrypt(data, key)
+        expect(blob).to match(hex_format)
+        expect(Vidibus::Secure.decrypt(blob, key)).to eql(data)
+      ensure
+        Vidibus::Secure.settings[:crypt][:encoding] = :base64
+      end
     end
 
     it "should raise an error if given secret key is nil" do
       expect {Vidibus::Secure.sign(data, nil)}.to raise_error(Vidibus::Secure::KeyError)
     end
 
-    it "should encrypt array data" do
-      expect(Vidibus::Secure.encrypt(data_array, key)).to eql(encrypted_base64_array)
+    it "should round-trip array data" do
+      blob = Vidibus::Secure.encrypt(data_array, key)
+      expect(Vidibus::Secure.decrypt(blob, key)).to eql(data_array)
     end
 
-    it "should encrypt hash data" do
-      expect(Vidibus::Secure.encrypt(data_hash, key)).to eql(encrypted_base64_hash)
+    it "should round-trip hash data" do
+      blob = Vidibus::Secure.encrypt(data_hash, key)
+      expect(Vidibus::Secure.decrypt(blob, key)).to eql(data_hash)
     end
   end
 
   describe ".decrypt" do
-    it "should decrypt a base64 string" do
+    it "should decrypt the legacy v4 base64 string" do
       expect(Vidibus::Secure.decrypt(encrypted_base64, key)).to eql(data)
     end
 
-    it "should decrypt array data from base64 string" do
-      expect(Vidibus::Secure.decrypt(encrypted_base64_array, key)).to eql(data_array)
+    it "should decrypt legacy array data from base64 string" do
+      expect(Vidibus::Secure.decrypt(encrypted_base64_array, key)).
+        to eql(data_array)
     end
 
-    it "should decrypt hash data from base64 string" do
-      expect(Vidibus::Secure.decrypt(encrypted_base64_hash, key)).to eql(data_hash)
+    it "should decrypt legacy hash data from base64 string" do
+      expect(Vidibus::Secure.decrypt(encrypted_base64_hash, key)).
+        to eql(data_hash)
     end
 
-    it "should decrypt a hexadecimal string if :encoding is provided" do
-      expect(Vidibus::Secure.decrypt(encrypted_hex, key, :encoding => :hex)).to eql(data)
+    it "should decrypt the legacy hex string when :encoding is :hex" do
+      expect(Vidibus::Secure.decrypt(encrypted_hex, key, :encoding => :hex)).
+        to eql(data)
     end
 
-    it "should decrypt a hexadecimal string if encoding settings for :crypt are set to hex" do
+    it "should decrypt the legacy hex string when settings :encoding is :hex" do
       Vidibus::Secure.settings[:crypt][:encoding] = :hex
-      expect(Vidibus::Secure.decrypt(encrypted_hex, key)).to eql(data)
-      Vidibus::Secure.settings[:crypt][:encoding] = :base64
+      begin
+        expect(Vidibus::Secure.decrypt(encrypted_hex, key)).to eql(data)
+      ensure
+        Vidibus::Secure.settings[:crypt][:encoding] = :base64
+      end
     end
 
     it "should not fail with nil content" do

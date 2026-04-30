@@ -11,7 +11,10 @@ end
 describe "Vidibus::Secure::Mongoid" do
   let(:model) { Model.new }
   let(:secret) { "My name is Bond." }
-  let(:encrypted_secret) { "+PlBG1ChiqUAYMrHlJzDL4NwXHtGBIUm/KQ2ZWfwxjM=\n" }
+  # legacy v4 fixture, still decryptable via the bare-CBC fallback
+  let(:legacy_encrypted_secret) do
+    "+PlBG1ChiqUAYMrHlJzDL4NwXHtGBIUm/KQ2ZWfwxjM=\n"
+  end
 
   it "should add a field :my_secret_encrypted" do
     expect(model).to respond_to(:my_secret_encrypted)
@@ -46,14 +49,16 @@ describe "Vidibus::Secure::Mongoid" do
 
     it "should encrypt a given value" do
       model.my_secret = secret
-      expect(model.my_secret_encrypted.data).to eql(encrypted_secret)
+      blob = model.my_secret_encrypted.data
+      expect(blob.unpack('m*').join.bytes.first).to eq(0x02)
+      expect(model.my_secret).to eql(secret)
     end
 
     it "should be persistent" do
       model.my_secret = secret
       model.save!
       model.reload
-      expect(model.my_secret_encrypted.data).to eql(encrypted_secret)
+      expect(model.my_secret).to eql(secret)
     end
 
     it "should not encrypt nil" do
@@ -65,17 +70,17 @@ describe "Vidibus::Secure::Mongoid" do
   describe "#my_secret" do
     it "should get :my_secret_encrypted" do
       expect(model.my_secret).to be_nil
-      model.my_secret_encrypted = encrypted_secret
+      model.my_secret_encrypted = legacy_encrypted_secret
       expect(model.my_secret).not_to be_nil
     end
 
-    it "should decrypt value of :my_secret_encrypted" do
-      model.my_secret_encrypted = encrypted_secret
+    it "should decrypt legacy v4 value of :my_secret_encrypted" do
+      model.my_secret_encrypted = legacy_encrypted_secret
       expect(model.my_secret).to eql(secret)
     end
 
     it "should be persistent" do
-      model.my_secret_encrypted = encrypted_secret
+      model.my_secret_encrypted = legacy_encrypted_secret
       model.save!
       model.reload
       expect(model.my_secret).to eql(secret)

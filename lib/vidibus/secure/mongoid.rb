@@ -2,33 +2,36 @@ module Vidibus
   module Secure
     module Mongoid
       extend ActiveSupport::Concern
+
       module ClassMethods
 
-        # Sets encrypted attributes.
+        # Defines encrypted attributes. The encryption key is
+        # resolved on every read and write via
+        # Vidibus::Secure.current_key, so callers can swap keys
+        # per request (e.g. tenant-scoped DB context).
         def attr_encrypted(*args)
-          key = ENV["VIDIBUS_SECURE_KEY"]
-          options = args.extract_options!
-          for field in args
+          args.extract_options!
+          args.each do |attr|
+            encrypted_field = "#{attr}_encrypted"
+            field encrypted_field, type: BSON::Binary
 
-            # Define Mongoid field
-            encrypted_field = "#{field}_encrypted"
-            self.send(:field, encrypted_field, type: BSON::Binary)
-
-            # Define setter
-            class_eval <<-EOV
-              def #{field}=(value)
-                self.#{encrypted_field} = value ?
-                  Vidibus::Secure.encrypt(value, "#{key}") :
-                  nil
+            define_method("#{attr}=") do |value|
+              if value.nil?
+                self[encrypted_field] = nil
+              else
+                blob = Vidibus::Secure.encrypt(
+                  value, Vidibus::Secure.current_key
+                )
+                self[encrypted_field] = BSON::Binary.new(blob)
               end
-            EOV
+            end
 
-            # Define getter
-            class_eval <<-EOV
-              def #{field}
-                Vidibus::Secure.decrypt(#{encrypted_field}.data, "#{key}") if #{encrypted_field}
-              end
-            EOV
+            define_method(attr) do
+              raw = self[encrypted_field]
+              return nil unless raw
+              data = raw.respond_to?(:data) ? raw.data : raw
+              Vidibus::Secure.decrypt(data, Vidibus::Secure.current_key)
+            end
           end
         end
       end
